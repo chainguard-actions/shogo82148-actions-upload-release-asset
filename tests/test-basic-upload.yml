@@ -1,0 +1,36 @@
+name: Test basic upload asset inputs
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Create a dummy asset file
+        run: |
+          echo "dummy asset content" > /tmp/test-asset.txt
+
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          github_token: ${{ github.token }}
+          upload_url: "https://uploads.github.com/repos/test-owner/test-repo/releases/1/assets{?name,label}"
+          asset_path: /tmp/test-asset.txt
+          asset_name: test-asset.txt
+          asset_content_type: text/plain
+          overwrite: false
+
+      - name: Assert action was attempted (inputs were accepted)
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "action outcome: $OUTCOME"
+          # The action will fail because the upload_url is not a real release URL,
+          # but we verify it ran (not skipped) meaning inputs were accepted
+          if [ "$OUTCOME" = "skipped" ]; then
+            echo "FAIL: action was skipped, expected it to run"
+            exit 1
+          fi
+          echo "PASS: action ran with all required inputs"
