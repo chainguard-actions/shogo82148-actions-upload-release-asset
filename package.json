@@ -1,0 +1,51 @@
+{
+  "name": "actions-upload-release-asset",
+  "version": "1.7.8",
+  "private": true,
+  "description": "Yet Another Upload Release Asset Action",
+  "main": "lib/main.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "lint": "eslint src/**/*.ts",
+    "package": "ncc build",
+    "test": "jest",
+    "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actions/typescript-action.git"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "setup"
+  ],
+  "author": "ICHINOSE Shogo",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^2.0.1",
+    "@actions/glob": "^0.5.0",
+    "@actions/http-client": "^3.0.0",
+    "mime-types": "^3.0.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@types/eslint__js": "^8.42.3",
+    "@types/jest": "^29.5.14",
+    "@types/mime-types": "^3.0.1",
+    "@types/node": "^24.10.1",
+    "@vercel/ncc": "^0.38.4",
+    "eslint": "^9.39.2",
+    "jest": "^29.7.0",
+    "js-yaml": "^4.1.1",
+    "prettier": "^3.7.4",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.50.1"
+  }
+}
