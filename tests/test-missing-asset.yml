@@ -1,0 +1,36 @@
+name: Test missing asset path (expect warning, not failure)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Upload release asset with non-existent file
+        id: upload
+        uses: .
+        continue-on-error: true
+        with:
+          github_token: fake-token-for-testing
+          upload_url: https://uploads.github.com/repos/test-owner/test-repo/releases/999999999/assets{?name,label}
+          asset_path: /tmp/this-file-does-not-exist-xyz123.txt
+          asset_name: nonexistent.txt
+          asset_content_type: text/plain
+
+      - name: Assert action succeeded with empty output (no files matched glob)
+        env:
+          OUTCOME: ${{ steps.upload.outcome }}
+          DOWNLOAD_URL: ${{ steps.upload.outputs.browser_download_url }}
+        run: |
+          echo "outcome: $OUTCOME"
+          echo "browser_download_url: '$DOWNLOAD_URL'"
+          if [ "$OUTCOME" != "success" ]; then
+            echo "FAIL: expected action to succeed (with warning) when asset_path does not match any files, got: $OUTCOME"
+            exit 1
+          fi
+          if [ -n "$DOWNLOAD_URL" ]; then
+            echo "FAIL: expected empty browser_download_url when no files matched, got: $DOWNLOAD_URL"
+            exit 1
+          fi
+          echo "PASS: action correctly warned and returned empty output when asset_path does not match any files"
