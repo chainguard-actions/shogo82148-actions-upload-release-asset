@@ -1,0 +1,103 @@
+name: "test"
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - main
+      - "releases/*"
+
+permissions: {}
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      - name: disable auto CRLF
+        run: git config --global core.autoCRLF false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: "npm"
+      - run: npm ci
+      - run: npm test
+
+  check-permission:
+    name: check permission
+    runs-on: ubuntu-latest
+    permissions: {}
+    outputs:
+      permission: ${{ steps.check.outputs.permission }}
+    steps:
+      - id: check
+        uses: shogo82148/actions-check-permissions@b7c32c43a066d5752565f554c15c9ac4d6d63e3b # v1.0.4
+      - name: the result
+        env:
+          PERMISSION: ${{ steps.check.outputs.permission }}
+        run: echo "$PERMISSION"
+
+  integrated:
+    name: integrated test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    needs:
+      - check-permission
+    if: needs.check-permission.outputs.permission == 'write'
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Create Release
+        id: create_release
+        uses: shogo82148/actions-create-release@6a396031bc74c57403da1018fec74d24c6aa03cd # v1.9.0
+        with:
+          tag_name: test-${{ github.run_id }}-${{ matrix.os }}
+          release_name: Test for ${{ github.run_id }} on ${{ matrix.os }}
+          prerelease: true
+          draft: true
+          body: |
+            https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+      - name: upload
+        uses: ./
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ case(matrix.os == 'windows-latest', 'dist\*', 'dist/*') }}
+
+      - name: overwrite
+        uses: ./
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ case(matrix.os == 'windows-latest', 'dist\*', 'dist/*') }}
+          overwrite: true
+
+      - name: cleanup
+        if: always()
+        shell: bash
+        run: |
+          if [ -n "$RELEASE_ID" ]; then
+            gh api -X DELETE -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2026-03-10" \
+              "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID" || true
+            sleep 5 # it takes a moment to delete the release
+          fi
+          gh api -X DELETE -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2026-03-10" \
+            "repos/$GITHUB_REPOSITORY/git/refs/tags/$TAG_NAME" || true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_ID: ${{ steps.create_release.outputs.id }}
+          TAG_NAME: test-${{ github.run_id }}-${{ matrix.os }}
