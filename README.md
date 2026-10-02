@@ -15,6 +15,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | v1.10.3 | [`v1.10.3`](https://github.com/chainguard-actions/shogo82148-actions-upload-release-asset/tree/v1.10.3) | [`d0cb37b`](https://github.com/shogo82148/actions-upload-release-asset/commit/d0cb37bb764791e72e64e643cd7056f74f1e77d7) |
 | v1.10.4 | [`v1.10.4`](https://github.com/chainguard-actions/shogo82148-actions-upload-release-asset/tree/v1.10.4) | [`aaba0f5`](https://github.com/shogo82148/actions-upload-release-asset/commit/aaba0f56bdbc1071f4af234d5cb16055e8a400de) |
 | v1.10.5 | [`v1.10.5`](https://github.com/chainguard-actions/shogo82148-actions-upload-release-asset/tree/v1.10.5) | [`eee382a`](https://github.com/shogo82148/actions-upload-release-asset/commit/eee382aaa9c6b13fd841694e63175fac2e2a1b48) |
+| v1.10.6 | [`v1.10.6`](https://github.com/chainguard-actions/shogo82148-actions-upload-release-asset/tree/v1.10.6) | [`9ee1396`](https://github.com/shogo82148/actions-upload-release-asset/commit/9ee13965a8a51926f330b424693f25fcff8f2ef6) |
 | v1.9.1 | [`v1.9.1`](https://github.com/chainguard-actions/shogo82148-actions-upload-release-asset/tree/v1.9.1) | [`59cbc56`](https://github.com/shogo82148/actions-upload-release-asset/commit/59cbc563d11314e48122193f8fe5cdda62ea6cf9) |
 | v1.9.2 | [`v1.9.2`](https://github.com/chainguard-actions/shogo82148-actions-upload-release-asset/tree/v1.9.2) | [`8f6863c`](https://github.com/shogo82148/actions-upload-release-asset/commit/8f6863c6c894ba46f9e676ef5cccec4752723c1e) |
 
