@@ -1,4 +1,4 @@
-name: Test basic upload release asset
+name: Test upload release asset with binary file
 on:
   workflow_dispatch:
 jobs:
@@ -7,9 +7,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Create a test asset file
+      - name: Create a binary test asset
         run: |
-          echo "hello world" > /tmp/test-asset.txt
+          echo "binary content for release" > /tmp/release-content.txt
+          tar -czf /tmp/release-asset.tar.gz -C /tmp release-content.txt
 
       - id: action
         uses: .
@@ -17,9 +18,9 @@ jobs:
         with:
           github_token: ${{ github.token }}
           upload_url: "https://uploads.github.com/repos/actionchain-harness/test/releases/1/assets{?name,label}"
-          asset_path: /tmp/test-asset.txt
-          asset_name: test-asset.txt
-          asset_content_type: text/plain
+          asset_path: /tmp/release-asset.tar.gz
+          asset_name: release-asset.tar.gz
+          asset_content_type: application/gzip
 
       - name: Assert action ran and failed gracefully on sentinel repo
         env:
