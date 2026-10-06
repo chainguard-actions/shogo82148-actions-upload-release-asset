@@ -1,4 +1,4 @@
-name: Test basic upload release asset
+name: Test upload release asset with overwrite enabled
 on:
   workflow_dispatch:
 jobs:
@@ -9,7 +9,7 @@ jobs:
 
       - name: Create a test asset file
         run: |
-          echo "hello world" > /tmp/test-asset.txt
+          echo "overwrite test content" > /tmp/overwrite-asset.txt
 
       - id: upload
         uses: .
@@ -17,11 +17,12 @@ jobs:
         with:
           github_token: ${{ github.token }}
           upload_url: "https://uploads.github.com/repos/actionchain-harness/test/releases/1/assets{?name,label}"
-          asset_path: /tmp/test-asset.txt
-          asset_name: test-asset.txt
+          asset_path: /tmp/overwrite-asset.txt
+          asset_name: overwrite-asset.txt
           asset_content_type: text/plain
+          overwrite: true
 
-      - name: Assert action ran (upload fails gracefully on sentinel repo)
+      - name: Assert action ran with overwrite flag (fails gracefully on sentinel repo)
         env:
           OUTCOME: ${{ steps.upload.outcome }}
           DOWNLOAD_URL: ${{ steps.upload.outputs.browser_download_url }}
@@ -33,7 +34,7 @@ jobs:
               echo "FAIL: action succeeded but browser_download_url is empty"
               exit 1
             fi
-            echo "PASS: upload succeeded, download URL: $DOWNLOAD_URL"
+            echo "PASS: upload succeeded with overwrite, download URL: $DOWNLOAD_URL"
           elif [ "$OUTCOME" = "failure" ]; then
             echo "PASS: action failed gracefully (sentinel repo is not resolvable)"
           else
