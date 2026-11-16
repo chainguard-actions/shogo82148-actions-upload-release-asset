@@ -4,8 +4,13 @@
   "version": "v1.10.6",
   "commit_sha": "9ee13965a8a51926f330b424693f25fcff8f2ef6",
   "url": "https://github.com/shogo82148/actions-upload-release-asset",
-  "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
+  "policy_sha": "374911c4be584df24e6da57af2d990570ef0f859",
   "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
   "test_agent_version": "2",
-  "harden_agent_version": "2"
+  "harden_agent_version": "2",
+  "dist_artifact": {
+    "gcs_uri": "gs://patch-actions-node-artifacts/dist-artifacts/shogo82148/actions-upload-release-asset/v1.10.6/sha256-50b3f2370dc23e10d9175480a3767abea1c390bf65e2808217ff5636c0fa4e2b.tar.gz",
+    "sha256": "50b3f2370dc23e10d9175480a3767abea1c390bf65e2808217ff5636c0fa4e2b",
+    "size_bytes": 747821
+  }
 }
